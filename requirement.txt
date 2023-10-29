@@ -1,0 +1,2 @@
+dagster==1.5.5
+dagster-pipes==1.5.5

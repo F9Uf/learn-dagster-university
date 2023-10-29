@@ -1,0 +1,12 @@
+dagster==1.4.*
+dagster-cloud
+dagster-duckdb
+geopandas
+kaleido
+pandas
+plotly
+shapely
+
+[dev]
+dagster-webserver
+pytest
