@@ -3,6 +3,7 @@ import duckdb
 import os
 from . import constants
 from dagster import asset
+from dagster_duckdb import DuckDBResource
 
 @asset
 def taxi_trips_file():
@@ -20,7 +21,7 @@ def taxi_trips_file():
 @asset(
 	deps=["taxi_trips_file"]
 )
-def taxi_trips():
+def taxi_trips(database: DuckDBResource):
     """
         The raw taxi trips dataset, loaded into a DuckDB database
     """
@@ -41,8 +42,8 @@ def taxi_trips():
         );
     """
 
-    conn = duckdb.connect(os.getenv("DUCKDB_DATABASE"))
-    conn.execute(sql_query)
+    with database.get_connection() as conn:
+        conn.execute(sql_query)
 
 
 @asset
@@ -60,7 +61,7 @@ def taxi_zones_file():
 @asset(
 	deps=["taxi_zones_file"]
 )
-def taxi_zones():
+def taxi_zones(database: DuckDBResource):
     sql_query = f"""
         create or replace table zones as (
             select
@@ -72,5 +73,5 @@ def taxi_zones():
         );
     """
 
-    conn = duckdb.connect(os.getenv("DUCKDB_DATABASE"))
-    conn.execute(sql_query)
+    with database.get_connection() as conn:
+        conn.execute(sql_query)
